@@ -30,7 +30,11 @@
   "scripts": {
     "build": "cake build",
     "test": "nodeunit tests.coffee",
+<<<<<<< HEAD
     "prepublish": "cake webclient"
+=======
+    "postinstall": "cake webclient"
+>>>>>>> f72bddf... Build webclient; and make sure that browserchannel is included, some libs need it
   },
   "licenses": [{
     "type": "BSD",
