@@ -261,6 +261,8 @@ exports.attach = (server, createClient, options) ->
         p "sending #{i msg}"
         send msg
         callback()
+        if options.onHandleOp?
+          options.onHandleOp client, {docName: op:opData.op, v:opData.v, meta:opData.meta}
 
     flush = (state) ->
       return if state.busy || state.queue.length == 0
