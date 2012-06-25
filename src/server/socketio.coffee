@@ -264,6 +264,7 @@ exports.attach = (server, model, options) ->
       query = state.queue.shift()
 
       callback = ->
+        console.log query
         state.busy = false
         flush state
 
