@@ -264,7 +264,8 @@ exports.attach = (server, model, options) ->
       query = state.queue.shift()
 
       callback = ->
-        console.log query
+        if options.onHandleOp?
+          options.onHandleOp client, {docName: query.doc, name: 'submit op'}
         state.busy = false
         flush state
 
