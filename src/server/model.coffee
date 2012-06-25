@@ -240,6 +240,8 @@ module.exports = Model = (db, options) ->
 
     doAuth client, {docName, op:opData.op, v:opData.v, meta:opData.meta}, 'submit op', callback, =>
       @applyOp docName, opData, callback
+      if options.onSubmitOp?
+        options.onSubmitOp client, {docName, op:opData.op, v:opData.v, meta:opData.meta}
 
   # Delete the named operation.
   # Callback is passed (deleted?, error message)
