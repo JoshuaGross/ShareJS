@@ -12,7 +12,7 @@
 # reference.
 
 if WEB?
-  types ||= exports.types
+  types = exports.types unless types?
   throw new Error 'Must load socket.io before this library' unless window.io
   io = window.io
 else
