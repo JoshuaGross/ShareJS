@@ -503,14 +503,13 @@
 
     Doc.prototype._otApply = function(docOp, isRemote) {
       var oldSnapshot;
-      oldSnapshot = this.snapshot;
-      this.snapshot = this.type.apply(this.snapshot, docOp);
-      this.emit('change', docOp, oldSnapshot);
+      oldSnapshot = _this.snapshot;
+      _this.snapshot = _this.type.apply(_this.snapshot, docOp);
+      _this.emit('change', docOp, oldSnapshot);
       if (isRemote) {
-        return this.emit('remoteop', docOp, oldSnapshot);
+        return _this.emit('remoteop', docOp, oldSnapshot);
       }
     };
-
     Doc.prototype._connectionStateChanged = function(state, data) {
       switch (state) {
         case 'disconnected':
