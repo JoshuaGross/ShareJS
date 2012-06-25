@@ -238,10 +238,11 @@ module.exports = Model = (db, options) ->
     opData.meta ||= {}
     opData.meta.source = client.id
 
-    doAuth client, {docName, op:opData.op, v:opData.v, meta:opData.meta}, 'submit op', callback, =>
+    actionData = {docName, op:opData.op, v:opData.v, meta:opData.meta}
+    doAuth client, actionData, 'submit op', callback, =>
       @applyOp docName, opData, callback
       if options.onSubmitOp?
-        options.onSubmitOp client, {docName, op:opData.op, v:opData.v, meta:opData.meta}
+        options.onSubmitOp client, actionData
 
   # Delete the named operation.
   # Callback is passed (deleted?, error message)
