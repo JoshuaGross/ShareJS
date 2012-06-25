@@ -14,7 +14,7 @@
 p = -> #require('util').debug
 i = -> #require('util').inspect
 
-exports = if WEB? then {} else module.exports
+exports = (if WEB? then {} else module.exports) unless exports?
 
 exports.name = 'text-composable'
 
@@ -50,7 +50,7 @@ exports._makeAppend = makeAppend = (op) -> (component) ->
     op[op.length - 1].d += component.d
   else
     op.push component
-  
+
 #  checkOp op
 
 # Makes 2 functions for taking components from the start of an op, and for peeking
@@ -87,10 +87,10 @@ makeTake = (op) ->
         c[field] = op[idx][field][offset...(offset + n)]
         offset += n
       c
-  
+
   peekType = () ->
     op[idx]
-  
+
   [take, peekType]
 
 # Find and return the length of an op component
@@ -129,7 +129,7 @@ exports.apply = (str, op) ->
     else
       throw new Error("The deleted text '#{component.d}' doesn't match the next characters in the document '#{str[...component.d.length]}'") unless component.d == str[...component.d.length]
       str = str[component.d.length..]
-  
+
   throw new Error("The applied op doesn't traverse the entire document") unless '' == str
 
   newDoc.join ''
@@ -178,7 +178,7 @@ exports.transform = (op, otherOp, side) ->
           #assert.ok chunk.d
           # The delete is unnecessary now.
           length -= chunk.d.length
-  
+
   # Append extras from op1
   while (component = take())
     throw new Error "Remaining fragments in the op: #{i component}" unless component?.i?
@@ -228,14 +228,14 @@ exports.compose = (op1, op2) ->
         else
           # Delete
           append chunk
-    
+
   # Append extras from op1
   while (component = take())
     throw new Error "Trailing stuff in op1 #{i component}" unless component?.d?
     append component
 
   result
-  
+
 
 invertComponent = (c) ->
   if typeof(c) == 'number'
@@ -251,7 +251,7 @@ exports.invert = (op) ->
   append = makeAppend result
 
   append(invertComponent component) for component in op
-  
+
   result
 
 if window?

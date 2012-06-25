@@ -12,8 +12,8 @@
 # reference.
 
 if WEB?
-  types = exports.types
-  {BCSocket, SockJS} = window 
+  types = exports.types unless types?
+  {BCSocket, SockJS} = window
 else
   types = require '../types'
   {BCSocket} = require 'browserchannel'
@@ -32,9 +32,9 @@ class Connection
     # - 'stopped': The connection is closed, and will not reconnect.
     @state = 'connecting'
 
-    @socket = 
+    @socket =
       if useSockJS?
-        new SockJS(host)    
+        new SockJS(host)
       else
         new BCSocket(host, reconnect:true)
 
@@ -118,7 +118,7 @@ class Connection
     @socket.close()
 
   # *** Doc management
- 
+
   makeDoc: (name, data, callback) ->
     throw new Error("Doc #{name} already open") if @docs[name]
     doc = new Doc(@, name, data)
