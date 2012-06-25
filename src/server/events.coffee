@@ -19,6 +19,9 @@ module.exports = (model) ->
   @onApplyOp = (docName, opData) ->
     p "onApplyOp #{docName} #{i opData} - #{emitterForDoc(docName)?.listeners('op')}"
     emitterForDoc(docName)?.emit('op', opData)
+    if model.options? and model.options.onApplyOp
+      opData.name = 'apply op' 
+      model.options.onApplyOp client, opData
 
   # Remove a listener from a particular document.
   @removeListener = (docName, listener) ->
