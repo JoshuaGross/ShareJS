@@ -615,8 +615,6 @@ Model:: = new EventEmitter
     actionData = {docName, op:opData.op, v:opData.v, meta:opData.meta}
     doAuth client, actionData, 'submit op', callback, =>
       @applyOp docName, opData, callback
-      if options.onSubmitOp?
-        options.onSubmitOp client, actionData
 
   # Delete the named operation.
   # Callback is passed (deleted?, error message)
@@ -638,6 +636,8 @@ Model:: = new EventEmitter
             db.docClosed docName, client
 
           callback? error, v
+          if options.onClientOpen?
+            options.onClientOpen client, actionData
 
     # Urgh no nice way to share this callbacky code.
     if version?
