@@ -302,6 +302,9 @@ module.exports = (createAgent, options) ->
 
         send msg
         callback()
+        if options.onHandleOp?
+          options.onHandleOp client, {docName: query.doc, name: 'submit op'}
+
 
     # We don't process any messages from the agent until they've authorized. Instead,
     # they are stored in this buffer.
