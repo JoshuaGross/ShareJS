@@ -1,6 +1,6 @@
 {
   "name": "share",
-  "version": "0.5.0-pre-jg1",
+  "version": "0.5.0-pre-jg2",
   "description": "A database for concurrent document editing",
   "keywords": ["operational transformation", "ot", "concurrent", "collaborative", "database", "server"],
   "homepage": "",
