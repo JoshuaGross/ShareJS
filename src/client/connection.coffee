@@ -35,8 +35,11 @@ class Connection
     @socket = new BCSocket host, reconnect:true
 
     @socket.onmessage = (msg) =>
-      if msg.auth is null
-        # Auth failed.
+      # Auth failed.
+      if msg.error? is "forbidden"
+        @lastError = msg.error # 'forbidden'
+        return @emit 'forbidden', msg.error
+      else if msg.auth is null
         @lastError = msg.error # 'forbidden'
         @disconnect()
         return @emit 'connect failed', msg.error
