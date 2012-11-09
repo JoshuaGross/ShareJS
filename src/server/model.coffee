@@ -348,6 +348,7 @@ module.exports = Model = (db, options) ->
     options.stats?.writeSnapshot?()
 
     writeSnapshot = db?.writeSnapshot or (docName, docData, dbMeta, callback) -> callback()
+    @writeSnapshot = writeSnapshot
 
     data =
       v: doc.v
