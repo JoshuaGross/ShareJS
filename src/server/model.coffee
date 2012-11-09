@@ -544,7 +544,6 @@ module.exports = Model = (db, options) ->
     load docName, (error, doc) ->
       return callback? error if error
 
-<<<<<<< HEAD
       clearTimeout doc.reapTimer
 
       if version?
@@ -605,48 +604,3 @@ module.exports = Model = (db, options) ->
 
 # Model inherits from EventEmitter.
 Model:: = new EventEmitter
-=======
-  # Attempt to submit an op from a client. Auth functions
-  # are checked before the op is submitted.
-  @clientSubmitOp = (client, docName, opData, callback) ->
-    opData.meta ||= {}
-    opData.meta.source = client.id
-
-    actionData = {docName, op:opData.op, v:opData.v, meta:opData.meta}
-    doAuth client, actionData, 'submit op', callback, =>
-      @applyOp docName, opData, callback
-
-  # Delete the named operation.
-  # Callback is passed (deleted?, error message)
-  @clientDelete = (client, docName, callback) ->
-    doAuth client, {docName}, 'delete', callback, =>
-      @delete docName, callback
-
-  # Open the named document for reading.
-  @clientOpen = (client, docName, version, listener, callback) ->
-    # I might want to promote some form of this method.
-    clientDidOpen = =>
-      db.docOpened docName, client, (error) =>
-        return callback? error if error
-
-        client.openDocs[docName] = true
-        @listenFromVersion docName, version, listener, (error, v) ->
-          if error
-            delete client.openDocs[docName]
-            db.docClosed docName, client
-
-          callback? error, v
-          if options.onClientOpen?
-            options.onClientOpen client, actionData
-
-    # Urgh no nice way to share this callbacky code.
-    if version?
-      # If the specified version is older than the current version, we have to also check that the
-      # client is allowed to get_ops from the specified version.
-      #
-      # We _could_ check the version number of the document and then only check getOps if
-      # the specified version is old, but an auth check is _probably_ faster than a db roundtrip.
-      doAuth client, {docName, start:version, end:null}, 'get ops', callback, ->
-        doAuth client, {docName, v:version}, 'open', callback, clientDidOpen
-    else
-      doAuth client, {docName}, 'open', callback, clientDidOpen
