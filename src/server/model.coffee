@@ -270,7 +270,7 @@ module.exports = Model = (db, options) ->
     db.getSnapshot docName, (error, data, dbMeta) ->
       return add docName, error if error
 
-      type = types[data.type]
+      type = types[data.type.name || data.type]
       unless type
         console.warn "Type '#{data.type}' missing"
         return callback "Type not found"
