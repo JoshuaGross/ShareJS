@@ -348,7 +348,6 @@ module.exports = Model = (db, options) ->
     options.stats?.writeSnapshot?()
 
     writeSnapshot = db?.writeSnapshot or (docName, docData, dbMeta, callback) -> callback()
-    @writeSnapshot = writeSnapshot
 
     data =
       v: doc.v
@@ -479,6 +478,12 @@ module.exports = Model = (db, options) ->
   @getSnapshot = (docName, callback) ->
     load docName, (error, doc) ->
       callback error, if doc then {v:doc.v, type:doc.type, snapshot:doc.snapshot, meta:doc.meta}
+  @writeSnapshot = (docName, data, meta, callback) ->
+    docs[docName].snapshot = data.snapshot
+    docs[docName].v = data.v
+    docs[docName].type = data.type
+    docs[docName].meta = data.meta
+    db?.writeSnapshot docName, data, meta, callback
 
   # Gets the latest version # of the document.
   # getVersion(docName, callback)
