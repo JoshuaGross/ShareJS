@@ -50,7 +50,7 @@ create.attach = attach = (server, options, model = createModel(options)) ->
 
   # SockJS frontend is disabled by default
   # allow attaching to specific server (fixes sockjs with express 3.0 (connect 2.0))
-  sockjs.attach(options.attachServer or server, createAgent, options.sockjs or {}) if options.sockjs?
+  sockjs.attach(options.sockjs.attachServer or server, createAgent, options.sockjs or {}) if options.sockjs?
 
   browserChannel.attach(server, createAgent, options.browserChannel or {}) if options.browserChannel != null
 
