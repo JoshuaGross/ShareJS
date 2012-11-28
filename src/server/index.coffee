@@ -49,7 +49,8 @@ create.attach = attach = (server, options, model = createModel(options)) ->
   socketio.attach(server, createAgent, options.socketio or {}) if options.socketio?
 
   # SockJS frontend is disabled by default
-  sockjs.attach(server, createAgent, options.sockjs or {}) if options.sockjs?
+  # allow attaching to specific server (fixes sockjs with express 3.0 (connect 2.0))
+  sockjs.attach(options.attachServer or server, createAgent, options.sockjs or {}) if options.sockjs?
 
   browserChannel.attach(server, createAgent, options.browserChannel or {}) if options.browserChannel != null
 
