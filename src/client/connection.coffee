@@ -38,11 +38,6 @@ class Connection
       else
         new BCSocket(host, reconnect:true)
 
-    # Send authentication message
-    @socket.send({
-      "auth": if authentication then authentication else null
-    })
-
     @socket.onmessage = (msg) =>
       msg = JSON.parse(msg.data) if useSockJS?
       if msg.auth is null
@@ -81,6 +76,10 @@ class Connection
 
     @socket.onopen = =>
       #console.warn 'onopen'
+      # Send authentication message
+      @socket.send({
+        "auth": if authentication then authentication else null
+      })
       @lastError = @lastReceivedDoc = @lastSentDoc = null
       @setState 'handshaking'
 
