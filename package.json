@@ -22,7 +22,7 @@
     "uglify-js": "~1",
     "request": ">= 2.1.1",
     "coffee-script": "*",
-    "browserchannel": "http://github.com/josephg/node-browserchannel/tarball/0c2064e5e53af82b32f355dc0c701085f967ac29",
+    "browserchannel": "https://github.com/JoshuaGross/node-browserchannel/tarball/master",
     "hat": "*"
   },
   "devDependencies": {
