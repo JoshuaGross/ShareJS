@@ -287,15 +287,15 @@ module.exports = Model = (db, options) ->
         if ops.length > 0
           console.log "Catchup #{docName} #{data.v} -> #{data.v + ops.length}"
 
-          try
-            for op in ops
+          for op in ops
+            try
               data.snapshot = type.apply data.snapshot, op.op
               data.v++
-          catch e
-            # This should never happen - it indicates that whats in the
-            # database is invalid.
-            console.error "Op data invalid for #{docName}: #{e.stack}"
-            return callback 'Op data invalid'
+            catch e
+              # This should never happen - it indicates that whats in the
+              # database is invalid.
+              console.error "Op data invalid for #{docName}: #{e.stack}"
+              return callback 'Op data invalid'
 
         model.emit 'load', docName, data
         add docName, error, data, committedVersion, ops, dbMeta
