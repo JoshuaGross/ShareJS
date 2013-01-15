@@ -163,6 +163,7 @@ module.exports = Model = (db, options) ->
         if error
           # The user should probably know about this.
           console.warn "Error writing ops to database: #{error}"
+          model.emit 'error', docName, opData
           return callback error
 
         options.stats?.writeOp?()
