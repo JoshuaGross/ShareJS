@@ -117,6 +117,7 @@ module.exports = Model = (db, options) ->
         # asked for. Its important that the submitted op is correctly transformed.
         console.error "Could not get old ops in model for document #{docName}"
         console.error "Expected ops #{opData.v} to #{doc.v} and got #{ops.length} ops"
+        model.emit 'error', docName, opData
         return callback 'Internal error'
 
       if ops.length > 0
@@ -133,12 +134,14 @@ module.exports = Model = (db, options) ->
             opData.v++
         catch error
           console.error error.stack
+          model.emit 'error', docName, ops
           return callback error.message
 
       try
         snapshot = doc.type.apply doc.snapshot, opData.op
       catch error
         console.error error.stack
+        model.emit 'error', docName, opData
         return callback error.message
 
       # The op data should be at the current version, and the new document data should be at
@@ -150,6 +153,7 @@ module.exports = Model = (db, options) ->
         # This should never happen.
         console.error "Version mismatch detected in model. File a ticket - this is a bug."
         console.error "Expecting #{opData.v} == #{doc.v}"
+        model.emit 'error', docName, opData
         return callback 'Internal error'
 
       #newDocData = {snapshot, type:type.name, v:opVersion + 1, meta:docData.meta}
@@ -287,15 +291,16 @@ module.exports = Model = (db, options) ->
         if ops.length > 0
           console.log "Catchup #{docName} #{data.v} -> #{data.v + ops.length}"
 
-          for op in ops
-            try
+          try
+            for op in ops
               data.snapshot = type.apply data.snapshot, op.op
               data.v++
-            catch e
-              # This should never happen - it indicates that whats in the
-              # database is invalid.
-              console.error "Op data invalid for #{docName}: #{e.stack}"
-              return callback 'Op data invalid'
+          catch e
+            # This should never happen - it indicates that whats in the
+            # database is invalid.
+            console.error "Op data invalid for #{docName}: #{e.stack}"
+            model.emit 'error', docName, data
+            return callback 'Op data invalid'
 
         model.emit 'load', docName, data
         add docName, error, data, committedVersion, ops, dbMeta
